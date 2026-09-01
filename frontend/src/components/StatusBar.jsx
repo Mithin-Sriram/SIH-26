@@ -7,7 +7,7 @@ export default function StatusBar({ shown, total, lastRefresh, error }) {
 
   return (
     <footer className="h-8 shrink-0 bg-white border-t border-slate-200
-      flex items-center justify-between px-4 text-xs text-slate-500">
+      flex items-center justify-between px-3 sm:px-4 text-xs text-slate-500">
       <div className="flex items-center gap-2">
         <span
           className={`h-1.5 w-1.5 rounded-full ${
@@ -15,15 +15,17 @@ export default function StatusBar({ shown, total, lastRefresh, error }) {
           }`}
         />
         <span>
-          Showing <span className="font-mono text-slate-700">{shown}</span>
-          {' of '}
-          <span className="font-mono text-slate-700">{total}</span> detections
+          <span className="font-mono text-slate-700">{shown}</span>
+          <span className="hidden sm:inline"> of </span>
+          <span className="sm:hidden">/</span>
+          <span className="font-mono text-slate-700">{total}</span>
+          <span className="hidden sm:inline"> detections</span>
         </span>
       </div>
       <div className="flex items-center gap-3">
         <span className="hidden sm:inline">auto-refresh 60s</span>
         <span>
-          Last refresh{' '}
+          <span className="hidden sm:inline">Last refresh </span>
           <span className="font-mono text-slate-700">{time}</span>
         </span>
       </div>

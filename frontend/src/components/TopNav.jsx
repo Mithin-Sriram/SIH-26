@@ -8,6 +8,15 @@ function FlameIcon() {
   )
 }
 
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M3 12h18M3 6h18M3 18h18" />
+    </svg>
+  )
+}
+
 function SearchIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 text-slate-400" fill="none"
@@ -40,7 +49,7 @@ function Freshness({ lastRefresh }) {
     return (
       <div className="flex items-center gap-2 text-xs text-slate-400">
         <span className="h-2 w-2 rounded-full bg-slate-300" />
-        <span>connecting…</span>
+        <span className="hidden sm:inline">connecting…</span>
       </div>
     )
   }
@@ -51,34 +60,47 @@ function Freshness({ lastRefresh }) {
       <span className={`h-2 w-2 rounded-full ${
         fresh ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
       }`} />
-      <span className="font-mono">
+      <span className="font-mono hidden sm:inline">
         {fresh ? 'live' : 'stale'} · {secs}s ago
       </span>
+      <span className="font-mono sm:hidden">{fresh ? 'live' : `${secs}s`}</span>
     </div>
   )
 }
 
 export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
-                                refreshing }) {
+                                refreshing, sidebarOpen, onToggleSidebar }) {
+  const [searchOpen, setSearchOpen] = useState(false)
+
   return (
     <header className="h-14 shrink-0 bg-white border-b border-slate-200
-      flex items-center gap-4 px-4 shadow-sm">
-      <div className="flex items-center gap-3">
+      flex items-center gap-2 sm:gap-4 px-3 sm:px-4 shadow-sm">
+      <button
+        onClick={onToggleSidebar}
+        className="md:hidden h-9 w-9 rounded-lg flex items-center justify-center
+          text-slate-500 hover:bg-slate-100 transition"
+        aria-label="Toggle sidebar"
+      >
+        <MenuIcon />
+      </button>
+
+      <div className="flex items-center gap-2 sm:gap-3">
         <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-red-600
-          to-orange-500 flex items-center justify-center shadow-sm">
+          to-orange-500 flex items-center justify-center shadow-sm shrink-0">
           <FlameIcon />
         </div>
         <div className="leading-tight">
-          <h1 className="text-[15px] font-semibold text-slate-900">
+          <h1 className="text-[14px] sm:text-[15px] font-semibold text-slate-900">
             Thermal Anomaly Classifier
           </h1>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[10px] sm:text-[11px] text-slate-400">
             SIH26162 · fire type intelligence
           </p>
         </div>
       </div>
 
-      <div className="relative ml-6 flex-1 max-w-md">
+      {/* Desktop search */}
+      <div className="relative ml-4 sm:ml-6 flex-1 max-w-md hidden md:block">
         <div className="absolute left-3 top-1/2 -translate-y-1/2">
           <SearchIcon />
         </div>
@@ -95,7 +117,43 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
         />
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
+      {/* Mobile search toggle */}
+      <div className="md:hidden ml-auto">
+        <button
+          onClick={() => setSearchOpen((v) => !v)}
+          className="h-9 w-9 rounded-lg flex items-center justify-center
+            text-slate-500 hover:bg-slate-100 transition"
+          aria-label="Toggle search"
+        >
+          <SearchIcon />
+        </button>
+      </div>
+
+      {/* Mobile search bar (expandable) */}
+      {searchOpen && (
+        <div className="md:hidden absolute top-14 left-0 right-0 z-50
+          bg-white border-b border-slate-200 px-3 py-2 shadow-md">
+          <div className="relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              <SearchIcon />
+            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
+              placeholder="Search id, class, notes, coordinates…"
+              className="w-full h-9 pl-9 pr-3 rounded-lg bg-slate-100
+                border border-slate-200 text-sm text-slate-700
+                placeholder:text-slate-400 focus:outline-none
+                focus:ring-2 focus:ring-orange-400/50 focus:border-orange-400
+                focus:bg-white transition"
+              autoFocus
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="ml-auto flex items-center gap-3 sm:gap-4">
         <Freshness lastRefresh={lastRefresh} />
         <button
           onClick={onRefresh}
@@ -105,7 +163,7 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
             disabled:opacity-50 flex items-center gap-1.5 transition"
         >
           <RefreshIcon spinning={refreshing} />
-          <span className="hidden md:inline">Refresh</span>
+          <span className="hidden sm:inline">Refresh</span>
         </button>
       </div>
     </header>

@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [filters, setFilters] = useState(() => new Set(CLASSES))
   const [search, setSearch] = useState('')
   const [selectedId, setSelectedId] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const detailRef = useRef({})
   const [, setDetailTick] = useState(0)
@@ -96,29 +97,18 @@ export default function Dashboard() {
         lastRefresh={lastRefresh}
         onRefresh={refresh}
         refreshing={refreshing}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((v) => !v)}
       />
 
-      {stats && (() => {
-        const hasFirms = Number(stats.sources?.firms || 0) > 0
-        return (
-          <div className={`h-7 shrink-0 flex items-center justify-center
-            gap-2 text-[11px] font-medium border-b ${
-              hasFirms
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                : 'bg-amber-50 border-amber-200 text-amber-700'
-            }`}>
-            <span className={`h-1.5 w-1.5 rounded-full ${
-              hasFirms ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'
-            }`} />
-            {hasFirms
-              ? 'Live FIRMS satellite data loaded'
-              : 'Demo data — for hackathon prototype'}
-          </div>
-        )
-      })()}
-
-      <div className="flex flex-1 min-h-0">
-        <Sidebar stats={stats} filters={filters} onToggleClass={toggleClass} />
+      <div className="flex flex-1 min-h-0 relative">
+        <Sidebar
+          stats={stats}
+          filters={filters}
+          onToggleClass={toggleClass}
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
         <main className="relative flex-1 min-w-0">
           <MapView

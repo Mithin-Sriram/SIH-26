@@ -7,7 +7,7 @@ import {
 
 function Section({ title, children, className = '' }) {
   return (
-    <div className={`px-4 py-3.5 border-b border-slate-100 ${className}`}>
+    <div className={`px-3 sm:px-4 py-3 sm:py-3.5 border-b border-slate-100 ${className}`}>
       <h4 className="text-[10px] font-semibold tracking-widest uppercase
         text-slate-400 mb-2.5">{title}</h4>
       {children}
@@ -17,7 +17,7 @@ function Section({ title, children, className = '' }) {
 
 function Reading({ label, value, unit }) {
   return (
-    <div className="bg-slate-50 rounded-lg px-3 py-2 border
+    <div className="bg-slate-50 rounded-lg px-2.5 sm:px-3 py-2 border
       border-slate-100">
       <p className="text-[10px] text-slate-400 uppercase tracking-wide">
         {label}
@@ -92,12 +92,12 @@ function DetailBody({ d }) {
 
   return (
     <>
-      <div className="px-4 pt-4 pb-3.5 border-b border-slate-100">
+      <div className="px-3 sm:px-4 pt-4 pb-3.5 border-b border-slate-100">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2.5">
             <span className="h-3 w-3 rounded-full shrink-0"
               style={{ backgroundColor: color }} />
-            <h3 className="font-semibold text-slate-900 leading-tight">
+            <h3 className="font-semibold text-slate-900 leading-tight text-sm sm:text-base">
               {d.predicted_class}
             </h3>
           </div>
@@ -129,7 +129,7 @@ function DetailBody({ d }) {
           </p>
           {d.nearest_industrial && (
             <p className="flex items-center gap-1.5 pt-1">
-              <span className="text-slate-400">Nearest facility:</span>
+              <span className="text-slate-400">Nearest:</span>
               <span className="text-slate-700">{d.nearest_industrial.name}</span>
               <span className="font-mono text-slate-500">
                 ({(d.nearest_industrial.distance_m / 1000).toFixed(0)} km)
@@ -189,7 +189,7 @@ function DetailBody({ d }) {
         </Section>
       )}
 
-      <div className="px-4 py-3 text-[10px] font-mono text-slate-400">
+      <div className="px-3 sm:px-4 py-3 text-[10px] font-mono text-slate-400">
         {d.model_version} · {d.features
           ? Object.keys(d.features).length + ' features'
           : ''}
@@ -200,38 +200,48 @@ function DetailBody({ d }) {
 
 export default function DetailPanel({ entry, onClose }) {
   return (
-    <aside className="w-1/5 min-w-[270px] max-w-[360px] shrink-0 bg-white
-      border-l border-slate-200 overflow-y-auto relative">
-      <button
+    <>
+      {/* Mobile backdrop */}
+      <div
+        className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]"
         onClick={onClose}
-        className="absolute top-3 right-3 z-10 h-7 w-7 rounded-lg
-          flex items-center justify-center text-slate-400
-          hover:bg-slate-100 hover:text-slate-600 transition"
-        aria-label="Close detail panel"
-      >
-        <CloseIcon />
-      </button>
+      />
 
-      {(!entry || entry.status === 'loading') && (
-        <div className="h-full flex flex-col items-center justify-center
-          gap-3 text-slate-400">
-          <div className="h-7 w-7 rounded-full border-[3px]
-            border-slate-200 border-t-orange-500 animate-spin" />
-          <p className="text-xs">Classifying detection…</p>
-        </div>
-      )}
+      <aside className="w-full sm:w-[320px] lg:w-1/5 lg:min-w-[270px] lg:max-w-[360px]
+        shrink-0 bg-white border-l border-slate-200 overflow-y-auto
+        fixed lg:static inset-y-0 right-0 z-50
+        h-full shadow-2xl lg:shadow-none">
+        <button
+          onClick={onClose}
+          className="sticky top-3 float-right mr-3 z-10 h-7 w-7 rounded-lg
+            flex items-center justify-center text-slate-400
+            hover:bg-slate-100 hover:text-slate-600 transition"
+          aria-label="Close detail panel"
+        >
+          <CloseIcon />
+        </button>
 
-      {entry?.status === 'error' && (
-        <div className="h-full flex flex-col items-center justify-center
-          gap-2 px-6 text-center">
-          <p className="text-sm font-semibold text-red-600">
-            Could not load detail
-          </p>
-          <p className="text-xs text-slate-500">{entry.message}</p>
-        </div>
-      )}
+        {(!entry || entry.status === 'loading') && (
+          <div className="h-full flex flex-col items-center justify-center
+            gap-3 text-slate-400">
+            <div className="h-7 w-7 rounded-full border-[3px]
+              border-slate-200 border-t-orange-500 animate-spin" />
+            <p className="text-xs">Classifying detection…</p>
+          </div>
+        )}
 
-      {entry?.status === 'ok' && <DetailBody d={entry.data} />}
-    </aside>
+        {entry?.status === 'error' && (
+          <div className="h-full flex flex-col items-center justify-center
+            gap-2 px-6 text-center">
+            <p className="text-sm font-semibold text-red-600">
+              Could not load detail
+            </p>
+            <p className="text-xs text-slate-500">{entry.message}</p>
+          </div>
+        )}
+
+        {entry?.status === 'ok' && <DetailBody d={entry.data} />}
+      </aside>
+    </>
   )
 }
