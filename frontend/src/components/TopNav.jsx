@@ -74,7 +74,7 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
 
   return (
     <header className="h-14 shrink-0 bg-white border-b border-slate-200
-      flex items-center gap-2 sm:gap-4 px-3 sm:px-4 shadow-sm">
+      flex items-center gap-2 sm:gap-4 px-3 sm:px-4 shadow-sm relative z-[60]">
       <button
         onClick={onToggleSidebar}
         className="md:hidden h-9 w-9 rounded-lg flex items-center justify-center

@@ -16,7 +16,7 @@ export default function Sidebar({ stats, filters, onToggleClass, open, onClose }
 
       <aside className={`
         shrink-0 bg-slate-900 text-slate-200 flex flex-col
-        fixed md:static inset-y-0 left-0 z-50
+        fixed md:static top-14 bottom-0 left-0 z-50
         w-[260px] md:w-[230px] lg:w-[260px] xl:w-[300px]
         transition-transform duration-200 ease-in-out
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

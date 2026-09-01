@@ -203,13 +203,13 @@ export default function DetailPanel({ entry, onClose }) {
     <>
       {/* Mobile backdrop */}
       <div
-        className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]"
+        className="lg:hidden fixed inset-0 z-[65] bg-black/40 backdrop-blur-[1px]"
         onClick={onClose}
       />
 
       <aside className="w-full sm:w-[320px] lg:w-1/5 lg:min-w-[270px] lg:max-w-[360px]
         shrink-0 bg-white border-l border-slate-200 overflow-y-auto
-        fixed lg:static inset-y-0 right-0 z-50
+        fixed lg:static inset-y-0 right-0 z-[70]
         h-full shadow-2xl lg:shadow-none">
         <button
           onClick={onClose}
