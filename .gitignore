@@ -11,7 +11,6 @@ node_modules/
 # Build output
 dist/
 dist-ssr/
-backend/static/
 
 # Env & secrets
 .env
@@ -24,4 +23,4 @@ Thumbs.db
 .idea/
 
 # Stray files
-backend/web/null
+frontend/null

@@ -37,69 +37,71 @@ Frontend: React + Vite + Leaflet map dashboard.
 
 ## Quick start
 
-### Single server (production) — one process, one port
-
-The frontend source lives in `backend/web/` and builds into `backend/static/`,
-which FastAPI serves directly — the backend is one self-contained unit and
-dashboard **and** API live on `http://localhost:8000`:
-
-```bash
-# 1. Build the frontend (output goes to backend/static/)
-cd backend/web
-npm install                               # only once
-npm run build
-
-# 2. Start the single server
-cd ..
-python -m venv .venv                      # only once
-.\.venv\Scripts\Activate.ps1              # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt           # only once
-python start.py
-
-# 3. Open http://localhost:8000 — dashboard + API + Swagger (/docs)
-```
-
 ### Development mode (hot reload) — two terminals
 
 ```bash
 # Terminal 1: backend API on :8000
 cd backend
+python -m venv .venv                      # only once
+.\.venv\Scripts\Activate.ps1              # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt           # only once
 python start.py
 
 # Terminal 2: Vite dev server on :5173 (proxies /api to :8000)
-cd web
+cd ../frontend
+npm install                               # only once
 npm run dev
 ```
 
 Open http://localhost:5173 — Vite serves the dashboard with hot reload and
 forwards all `/api` requests to the backend, so no CORS or URL config is needed.
 
+### Local single-server mode (optional)
+
+Build the frontend once and let FastAPI serve everything on :8000:
+
+```bash
+cd frontend && npm run build              # outputs to frontend/dist
+cd ../backend && python start.py          # http://localhost:8000 = dashboard + API
+```
+
 On first run, `start.py` generates `training_data.csv` and trains the model
 (~1–2 min); artifacts are cached in `app/ml/artifacts/` so later runs start fast.
 
-## Deployment (Render — one service, one URL)
+## Deployment
 
-The whole app — dashboard, API, and ML model — runs as a **single web service**.
-The repo ships a Render Blueprint (`render.yaml`):
+Two services, one URL each:
 
-1. Push this repo to GitHub.
-2. On <https://dashboard.render.com> → **New → Blueprint**, select the repo.
-   Render reads `render.yaml` and creates one web service:
-   - **Build**: installs Python deps, builds the frontend (`backend/web` → `backend/static`)
-   - **Start**: `python start.py` (binds to Render's `$PORT`)
-   - **Health check**: `/health`
-3. Every `git push` to `main` auto-deploys. Dashboard + API + Swagger (`/docs`)
-   are served from the same URL.
+| Service | Platform | What |
+|---|---|---|
+| `frontend/` | **Vercel** | Static Vite dashboard (Vercel auto-detects Vite) |
+| `backend/` | **Render** | FastAPI + XGBoost API (Python needs a real server; Vercel's 250 MB serverless limit can't fit the ~450 MB ML stack) |
+
+### Backend → Render (deploy first, you need its URL)
+
+1. <https://dashboard.render.com> → **New → Blueprint** → select this repo.
+   `render.yaml` creates one API service (build: `pip install -r requirements.txt`,
+   start: `python start.py`, health check `/health`).
+2. Add an environment variable `CORS_ORIGINS` = your Vercel URL(s),
+   e.g. `https://sih-26.vercel.app` (comma-separated for multiple).
+3. Note the service URL, e.g. `https://sih26162-classifier-api.onrender.com`.
 
 Model artifacts (`model.pkl`, `calibrator.pkl`, `training_data.csv`) are committed
 so the service boots instantly — no retraining on deploy or cold start.
-On Render's free tier the service spins down after ~15 min of inactivity
-(~30 s cold start); the first request after that just takes a little longer.
+On the free tier the service spins down after ~15 min of inactivity (~30 s cold start).
 
-> Why not Vercel? Vercel only runs static frontends and serverless functions
-> (250 MB limit); this app's ML stack (xgboost, scikit-learn, scipy, shap) is
-> ~450 MB and needs a long-running Python server, so it deploys as one service
-> on Render instead.
+### Frontend → Vercel
+
+1. <https://vercel.com/new> → import this repo.
+2. **Root Directory: `frontend`** (leave build settings on auto — Vercel
+   detects Vite, runs `npm run build`, serves `dist/`).
+3. Add an environment variable `VITE_API_BASE` =
+   `https://<your-render-service>.onrender.com/api` (from the step above).
+4. Deploy. Redeploys automatically on every push to `main`.
+
+The frontend defaults to relative `/api` (local dev + single-server mode);
+`VITE_API_BASE` points it at the hosted backend, and `CORS_ORIGINS` on the
+backend allows the Vercel domain.
 
 ### Loading real FIRMS data (optional)
 
@@ -128,24 +130,25 @@ Swagger docs: <http://localhost:8000/docs>
 ## Project layout
 
 ```
-backend/                            # self-contained deployable unit
+backend/                            # FastAPI + ML (deploy on Render)
   start.py                          # one-command bootstrap (data → model → server)
+  render.yaml is at repo root       # Render Blueprint for the API service
   app/
-    main.py                         # FastAPI, CORS, lifespan, static serving
+    main.py                         # FastAPI, CORS (CORS_ORIGINS env), static serving
     api/detections.py               # routes
     models/schemas.py               # Pydantic response models
     ml/
       train_model.py  predict.py  explain.py
-      artifacts/                    # model.pkl, calibrator.pkl, features.json (generated)
+      artifacts/                    # model.pkl, calibrator.pkl, features.json (committed)
     data/
       demo_seed.py  firms.py  detections_store.py  facilities.py
-      generate_synthetic_data.py  training_data.csv (generated)
-  web/                              # frontend source (Vite + React)
-    src/
-      pages/Dashboard.jsx           # layout, 60 s polling, filters, banner
-      components/                   # TopNav, Sidebar, MapView, DetailPanel, StatusBar
-      lib/                          # api.js, constants.js
-  static/                           # frontend build output (generated, gitignored)
+      generate_synthetic_data.py  training_data.csv (committed)
+frontend/                           # Vite + React dashboard (deploy on Vercel)
+  src/
+    pages/Dashboard.jsx             # layout, 60 s polling, filters, banner
+    components/                     # TopNav, Sidebar, MapView, DetailPanel, StatusBar
+    lib/                            # api.js (VITE_API_BASE), constants.js
+  dist/                             # build output (generated, gitignored)
 ```
 
 ## Plugging in real Sentinel-2 / OSM / GEE data later
