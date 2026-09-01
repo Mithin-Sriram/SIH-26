@@ -47,9 +47,10 @@ def main() -> None:
 
     static_dir = os.path.join(BASE, "static")
     dashboard = " (dashboard + API)" if os.path.isdir(static_dir) else ""
-    print(f"[3/3] starting FastAPI on http://localhost:8000{dashboard} ...")
+    port = os.environ.get("PORT", "8000")
+    print(f"[3/3] starting FastAPI on http://localhost:{port}{dashboard} ...")
     subprocess.run(
-        [py, "-m", "uvicorn", "app.main:app", "--port", "8000"],
+        [py, "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", port],
         cwd=BASE,
     )
 

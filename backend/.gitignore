@@ -4,7 +4,5 @@ __pycache__/
 venv/
 .env
 *.joblib
-app/ml/artifacts/*.pkl
-app/data/training_data.csv
 app/data/firms.csv
 app/data/firms_last_upload.csv

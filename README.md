@@ -77,6 +77,30 @@ forwards all `/api` requests to the backend, so no CORS or URL config is needed.
 On first run, `start.py` generates `training_data.csv` and trains the model
 (~1–2 min); artifacts are cached in `app/ml/artifacts/` so later runs start fast.
 
+## Deployment (Render — one service, one URL)
+
+The whole app — dashboard, API, and ML model — runs as a **single web service**.
+The repo ships a Render Blueprint (`render.yaml`):
+
+1. Push this repo to GitHub.
+2. On <https://dashboard.render.com> → **New → Blueprint**, select the repo.
+   Render reads `render.yaml` and creates one web service:
+   - **Build**: installs Python deps, builds the frontend (`backend/web` → `backend/static`)
+   - **Start**: `python start.py` (binds to Render's `$PORT`)
+   - **Health check**: `/health`
+3. Every `git push` to `main` auto-deploys. Dashboard + API + Swagger (`/docs`)
+   are served from the same URL.
+
+Model artifacts (`model.pkl`, `calibrator.pkl`, `training_data.csv`) are committed
+so the service boots instantly — no retraining on deploy or cold start.
+On Render's free tier the service spins down after ~15 min of inactivity
+(~30 s cold start); the first request after that just takes a little longer.
+
+> Why not Vercel? Vercel only runs static frontends and serverless functions
+> (250 MB limit); this app's ML stack (xgboost, scikit-learn, scipy, shap) is
+> ~450 MB and needs a long-running Python server, so it deploys as one service
+> on Render instead.
+
 ### Loading real FIRMS data (optional)
 
 Download a VIIRS 375m CSV for India from
