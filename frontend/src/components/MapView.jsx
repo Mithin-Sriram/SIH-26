@@ -38,7 +38,7 @@ function Overlay({ children }) {
 export default function MapView({ detections, selectedId, onSelect,
                                  loading, error, empty, onClearFilters }) {
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 z-0">
       <MapContainer
         center={INDIA_CENTER}
         zoom={INDIA_ZOOM}

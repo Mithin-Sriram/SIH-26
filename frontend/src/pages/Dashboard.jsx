@@ -110,7 +110,7 @@ export default function Dashboard() {
           onClose={() => setSidebarOpen(false)}
         />
 
-        <main className="relative flex-1 min-w-0">
+        <main className="relative flex-1 min-w-0 z-0">
           <MapView
             detections={filtered}
             selectedId={selectedId}
@@ -121,14 +121,14 @@ export default function Dashboard() {
             onClearFilters={clearFilters}
           />
         </main>
-
-        {selectedId && (
-          <DetailPanel
-            entry={detailRef.current[selectedId]}
-            onClose={() => setSelectedId(null)}
-          />
-        )}
       </div>
+
+      {selectedId && (
+        <DetailPanel
+          entry={detailRef.current[selectedId]}
+          onClose={() => setSelectedId(null)}
+        />
+      )}
 
       <StatusBar
         shown={filtered.length}
