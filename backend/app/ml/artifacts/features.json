@@ -1,0 +1,80 @@
+{
+  "features": [
+    "latitude",
+    "longitude",
+    "frp_mw",
+    "brightness_temp_i4_k",
+    "brightness_temp_i5_k",
+    "confidence_pct",
+    "day_night_flag",
+    "persistence_days",
+    "total_detections_365d",
+    "frp_std_dev_pct",
+    "day_night_ratio",
+    "active_days_count",
+    "ndvi",
+    "nbr",
+    "dnbr",
+    "built_probability",
+    "trees_probability",
+    "crops_probability",
+    "water_probability",
+    "distance_to_industrial_m",
+    "distance_to_refinery_m",
+    "industrial_count_500m",
+    "burned_area_overlap",
+    "detection_month"
+  ],
+  "classes": [
+    "Agricultural Burning",
+    "Gas Flare",
+    "Industrial Fire",
+    "Other/Unknown",
+    "Wildfire"
+  ],
+  "encoding": {
+    "day_night_flag": {
+      "day": 0,
+      "night": 1
+    }
+  },
+  "defaults": {
+    "latitude": 26.094299999999997,
+    "longitude": 78.00422,
+    "frp_mw": 138.1483778717778,
+    "brightness_temp_i4_k": 462.60602697179036,
+    "brightness_temp_i5_k": 336.45896972117885,
+    "confidence_pct": 78.05264540014562,
+    "day_night_flag": 0,
+    "persistence_days": 8.906586551864677,
+    "total_detections_365d": 18.0,
+    "frp_std_dev_pct": 34.465276101759216,
+    "day_night_ratio": 0.45973428508297953,
+    "active_days_count": 7.0,
+    "ndvi": 0.33083438066377624,
+    "nbr": -0.0503688740094077,
+    "dnbr": 0.16820541337862038,
+    "built_probability": 0.1694628044923167,
+    "trees_probability": 0.18061376700399334,
+    "crops_probability": 0.17682832852669272,
+    "water_probability": 0.047292008537056396,
+    "distance_to_industrial_m": 6725.0,
+    "distance_to_refinery_m": 14242.5,
+    "industrial_count_500m": 0.0,
+    "burned_area_overlap": 0.0,
+    "detection_month": 6.0
+  },
+  "best_params": {
+    "max_depth": 6,
+    "learning_rate": 0.2713666061666206,
+    "n_estimators": 470,
+    "subsample": 0.9117850265855646,
+    "colsample_bytree": 0.8225212285011936,
+    "min_child_weight": 3
+  },
+  "cell_size_deg": 0.45,
+  "metrics": {
+    "test_macro_f1": 0.9535,
+    "test_samples": 492
+  }
+}

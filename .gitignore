@@ -1,0 +1,26 @@
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Env & secrets
+.env
+*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Stray files
+frontend/null

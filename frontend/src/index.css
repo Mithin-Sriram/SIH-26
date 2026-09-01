@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #f1f5f9;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #e2e8f0;
+  font-family: inherit;
+}
+
+.leaflet-tooltip {
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 0.18);
+  padding: 6px 9px;
+  font-size: 11px;
+}
+
+aside::-webkit-scrollbar {
+  width: 8px;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
