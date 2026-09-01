@@ -37,23 +37,41 @@ Frontend: React + Vite + Leaflet map dashboard.
 
 ## Quick start
 
+### Single server (production) — one process, one port
+
+The frontend builds into `backend/static/`, which FastAPI serves directly —
+dashboard **and** API live on `http://localhost:8000`:
+
 ```bash
-# 1. Backend — one command does data-generation (if needed),
-#    model training (if needed), then starts the API on :8000
-cd backend
+# 1. Build the frontend (output goes to backend/static/)
+cd frontend
+npm install                               # only once
+npm run build
+
+# 2. Start the single server
+cd ../backend
 python -m venv .venv                      # only once
 .\.venv\Scripts\Activate.ps1              # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt           # only once
 python start.py
 
-# 2. Frontend — starts the dashboard on :5173
-cd ../frontend
-npm install                               # only once
-npm run dev
-
-# 3. Open http://localhost:5173 — the map shows 48 seeded detections
-#    across Gujarat / Odisha / Punjab-Haryana / Uttarakhand-Himalaya.
+# 3. Open http://localhost:8000 — dashboard + API + Swagger (/docs)
 ```
+
+### Development mode (hot reload) — two terminals
+
+```bash
+# Terminal 1: backend API on :8000
+cd backend
+python start.py
+
+# Terminal 2: Vite dev server on :5173 (proxies /api to :8000)
+cd frontend
+npm run dev
+```
+
+Open http://localhost:5173 — Vite serves the dashboard with hot reload and
+forwards all `/api` requests to the backend, so no CORS or URL config is needed.
 
 On first run, `start.py` generates `training_data.csv` and trains the model
 (~1–2 min); artifacts are cached in `app/ml/artifacts/` so later runs start fast.

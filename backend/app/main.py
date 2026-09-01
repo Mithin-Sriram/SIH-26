@@ -6,13 +6,17 @@ Run with:
 
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .api.detections import router as detections_router
 from .data import detections_store
+
+STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
 
 
 @asynccontextmanager
@@ -53,3 +57,9 @@ def health() -> dict[str, str]:
 
 
 app.include_router(detections_router, prefix="/api", tags=["detections"])
+
+# Serve the built frontend (frontend/ `npm run build` outputs to backend/static)
+# so the whole app runs from a single origin and port. In dev, use Vite instead
+# (npm run dev proxies /api to this server).
+if os.path.isdir(STATIC_DIR):
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="frontend")

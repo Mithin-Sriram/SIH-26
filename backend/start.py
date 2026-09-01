@@ -45,7 +45,9 @@ def main() -> None:
     else:
         print("[2/3] model artifacts found")
 
-    print("[3/3] starting FastAPI on http://localhost:8000 ...")
+    static_dir = os.path.join(BASE, "static")
+    dashboard = " (dashboard + API)" if os.path.isdir(static_dir) else ""
+    print(f"[3/3] starting FastAPI on http://localhost:8000{dashboard} ...")
     subprocess.run(
         [py, "-m", "uvicorn", "app.main:app", "--port", "8000"],
         cwd=BASE,
