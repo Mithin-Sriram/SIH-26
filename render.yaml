@@ -7,3 +7,9 @@ services:
     startCommand: python start.py
     healthCheckPath: /health
     autoDeploy: true
+    envVars:
+      # Render defaults to the newest Python (3.14), which has no prebuilt
+      # pydantic-core wheel for our pinned version — pin to 3.13 to match
+      # local dev and install from wheels.
+      - key: PYTHON_VERSION
+        value: 3.13.6
