@@ -58,7 +58,7 @@ def health() -> dict[str, str]:
 
 app.include_router(detections_router, prefix="/api", tags=["detections"])
 
-# Serve the built frontend (frontend/ `npm run build` outputs to backend/static)
+# Serve the built frontend (backend/web `npm run build` outputs to backend/static)
 # so the whole app runs from a single origin and port. In dev, use Vite instead
 # (npm run dev proxies /api to this server).
 if os.path.isdir(STATIC_DIR):

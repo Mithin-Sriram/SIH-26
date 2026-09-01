@@ -39,17 +39,18 @@ Frontend: React + Vite + Leaflet map dashboard.
 
 ### Single server (production) — one process, one port
 
-The frontend builds into `backend/static/`, which FastAPI serves directly —
+The frontend source lives in `backend/web/` and builds into `backend/static/`,
+which FastAPI serves directly — the backend is one self-contained unit and
 dashboard **and** API live on `http://localhost:8000`:
 
 ```bash
 # 1. Build the frontend (output goes to backend/static/)
-cd frontend
+cd backend/web
 npm install                               # only once
 npm run build
 
 # 2. Start the single server
-cd ../backend
+cd ..
 python -m venv .venv                      # only once
 .\.venv\Scripts\Activate.ps1              # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt           # only once
@@ -66,7 +67,7 @@ cd backend
 python start.py
 
 # Terminal 2: Vite dev server on :5173 (proxies /api to :8000)
-cd frontend
+cd web
 npm run dev
 ```
 
@@ -103,23 +104,24 @@ Swagger docs: <http://localhost:8000/docs>
 ## Project layout
 
 ```
-backend/
-  start.py                        # one-command bootstrap (data → model → server)
+backend/                            # self-contained deployable unit
+  start.py                          # one-command bootstrap (data → model → server)
   app/
-    main.py                       # FastAPI, CORS, lifespan
-    api/detections.py             # routes
-    models/schemas.py             # Pydantic response models
+    main.py                         # FastAPI, CORS, lifespan, static serving
+    api/detections.py               # routes
+    models/schemas.py               # Pydantic response models
     ml/
       train_model.py  predict.py  explain.py
-      artifacts/                  # model.pkl, calibrator.pkl, features.json (generated)
+      artifacts/                    # model.pkl, calibrator.pkl, features.json (generated)
     data/
       demo_seed.py  firms.py  detections_store.py  facilities.py
       generate_synthetic_data.py  training_data.csv (generated)
-frontend/
-  src/
-    pages/Dashboard.jsx           # layout, 60 s polling, filters, banner
-    components/                   # TopNav, Sidebar, MapView, DetailPanel, StatusBar
-    lib/                          # api.js, constants.js
+  web/                              # frontend source (Vite + React)
+    src/
+      pages/Dashboard.jsx           # layout, 60 s polling, filters, banner
+      components/                   # TopNav, Sidebar, MapView, DetailPanel, StatusBar
+      lib/                          # api.js, constants.js
+  static/                           # frontend build output (generated, gitignored)
 ```
 
 ## Plugging in real Sentinel-2 / OSM / GEE data later

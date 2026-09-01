@@ -24,4 +24,4 @@ Thumbs.db
 .idea/
 
 # Stray files
-frontend/null
+backend/web/null
