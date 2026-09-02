@@ -2,8 +2,15 @@ import { useEffect, useState } from 'react'
 
 function FlameIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="currentColor">
-      <path d="M12 2c1.5 3.5-.5 5-1.5 6.5C9.2 10.4 8 12 8 14a4 4 0 0 0 8 0c0-1.2-.4-2.2-1-3 2.5 1 4 3.4 4 6a7 7 0 1 1-14 0c0-4.5 3.5-7 5-9 .9-1.2 1.4-3.5 2-6z" />
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+      <defs>
+        <linearGradient id="flame-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#ef4444" />
+          <stop offset="50%" stopColor="#f97316" />
+          <stop offset="100%" stopColor="#fbbf24" />
+        </linearGradient>
+      </defs>
+      <path fill="url(#flame-grad)" d="M12 2c1.5 3.5-.5 5-1.5 6.5C9.2 10.4 8 12 8 14a4 4 0 0 0 8 0c0-1.2-.4-2.2-1-3 2.5 1 4 3.4 4 6a7 7 0 1 1-14 0c0-4.5 3.5-7 5-9 .9-1.2 1.4-3.5 2-6z" />
     </svg>
   )
 }
@@ -11,7 +18,7 @@ function FlameIcon() {
 function MenuIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>
   )
@@ -20,7 +27,7 @@ function MenuIcon() {
 function SearchIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 text-slate-400" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-3.5-3.5" />
     </svg>
@@ -30,7 +37,7 @@ function SearchIcon() {
 function RefreshIcon({ spinning }) {
   return (
     <svg viewBox="0 0 24 24" className={`h-4 w-4 ${spinning ? 'animate-spin' : ''}`}
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <path d="M21 12a9 9 0 1 1-2.64-6.36" />
       <path d="M21 3v6h-6" />
     </svg>
@@ -48,8 +55,8 @@ function Freshness({ lastRefresh }) {
   if (!lastRefresh) {
     return (
       <div className="flex items-center gap-2 text-xs text-slate-400">
-        <span className="h-2 w-2 rounded-full bg-slate-300" />
-        <span className="hidden sm:inline">connecting…</span>
+        <span className="h-2 w-2 rounded-full bg-slate-300 animate-pulse" />
+        <span className="hidden sm:inline">connecting</span>
       </div>
     )
   }
@@ -57,8 +64,8 @@ function Freshness({ lastRefresh }) {
   const fresh = secs < 70
   return (
     <div className="flex items-center gap-2 text-xs text-slate-500">
-      <span className={`h-2 w-2 rounded-full ${
-        fresh ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+      <span className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+        fresh ? 'bg-emerald-500' : 'bg-amber-500'
       }`} />
       <span className="font-mono hidden sm:inline">
         {fresh ? 'live' : 'stale'} · {secs}s ago
@@ -84,16 +91,17 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
         <MenuIcon />
       </button>
 
-      <div className="flex items-center gap-2 sm:gap-3">
-        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-red-600
-          to-orange-500 flex items-center justify-center shadow-sm shrink-0">
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="h-9 w-9 rounded-xl fire-gradient flex items-center
+          justify-center shadow-sm shrink-0">
           <FlameIcon />
         </div>
         <div className="leading-tight">
-          <h1 className="text-[14px] sm:text-[15px] font-semibold text-slate-900">
+          <h1 className="text-[14px] sm:text-[15px] font-display font-semibold
+            text-slate-900 tracking-tight">
             Thermal Anomaly Classifier
           </h1>
-          <p className="text-[10px] sm:text-[11px] text-slate-400">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
             SIH26162 · fire type intelligence
           </p>
         </div>
@@ -108,7 +116,7 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
           type="text"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search id, class, notes, coordinates…"
+          placeholder="Search id, class, notes, coordinates..."
           className="w-full h-9 pl-9 pr-3 rounded-lg bg-slate-100
             border border-slate-200 text-sm text-slate-700
             placeholder:text-slate-400 focus:outline-none
@@ -132,7 +140,7 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
       {/* Mobile search bar (expandable) */}
       {searchOpen && (
         <div className="md:hidden absolute top-14 left-0 right-0 z-50
-          bg-white border-b border-slate-200 px-3 py-2 shadow-md">
+          bg-white border-b border-slate-200 px-3 py-2 shadow-md animate-slide-up">
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2">
               <SearchIcon />
@@ -141,7 +149,7 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
               type="text"
               value={search}
               onChange={(e) => onSearch(e.target.value)}
-              placeholder="Search id, class, notes, coordinates…"
+              placeholder="Search id, class, notes, coordinates..."
               className="w-full h-9 pl-9 pr-3 rounded-lg bg-slate-100
                 border border-slate-200 text-sm text-slate-700
                 placeholder:text-slate-400 focus:outline-none

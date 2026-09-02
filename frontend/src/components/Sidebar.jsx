@@ -9,7 +9,7 @@ export default function Sidebar({ stats, filters, onToggleClass, open, onClose }
       {/* Mobile backdrop */}
       {open && (
         <div
-          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]"
+          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px] animate-fade-in"
           onClick={onClose}
         />
       )}
@@ -30,7 +30,7 @@ export default function Sidebar({ stats, filters, onToggleClass, open, onClose }
             aria-label="Close sidebar"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </button>

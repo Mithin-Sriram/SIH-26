@@ -26,9 +26,9 @@ function radiusFor(frp, selected) {
 function Overlay({ children }) {
   return (
     <div className="absolute inset-0 z-[1100] flex items-center
-      justify-center bg-slate-100/70 backdrop-blur-[1px] pointer-events-none">
+      justify-center bg-slate-100/70 backdrop-blur-[1px] pointer-events-none animate-fade-in">
       <div className="pointer-events-auto bg-white rounded-xl shadow-lg
-        border border-slate-200 px-6 py-5 max-w-xs text-center">
+        border border-slate-200 px-6 py-5 max-w-xs text-center animate-scale-in">
         {children}
       </div>
     </div>
@@ -61,7 +61,7 @@ export default function MapView({ detections, selectedId, onSelect,
               radius={radiusFor(d.frp_mw, selected)}
               pathOptions={{
                 color: selected ? '#0f172a' : '#334155',
-                weight: selected ? 3 : 1,
+                weight: selected ? 2.5 : 1,
                 fillColor: color,
                 fillOpacity: selected ? 0.95 : 0.72,
                 opacity: 1,
@@ -90,7 +90,7 @@ export default function MapView({ detections, selectedId, onSelect,
             <div className="h-7 w-7 rounded-full border-[3px]
               border-slate-200 border-t-orange-500 animate-spin" />
             <p className="text-sm text-slate-500">
-              Loading detections from the classifier…
+              Loading detections from the classifier...
             </p>
           </div>
         </Overlay>

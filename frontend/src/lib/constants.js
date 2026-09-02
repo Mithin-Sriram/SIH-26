@@ -28,7 +28,7 @@ export const CATEGORY_COLORS = {
 
 export const PRIORITY_STYLES = {
   High: 'bg-red-600 text-white',
-  Medium: 'bg-yellow-400 text-slate-900',
+  Medium: 'bg-amber-400 text-slate-900',
   Low: 'bg-slate-500 text-white',
 }
 

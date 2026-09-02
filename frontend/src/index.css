@@ -2,14 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  background: #f1f5f9;
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    background: #f8fafc;
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgba(249, 115, 22, 0.2);
+    color: #1e293b;
+  }
 }
 
+/* Leaflet overrides */
 .leaflet-container {
   height: 100%;
   width: 100%;
@@ -19,21 +30,44 @@ body,
 
 .leaflet-tooltip {
   border: none;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgb(15 23 42 / 0.18);
-  padding: 6px 9px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 0.15);
+  padding: 8px 12px;
   font-size: 11px;
 }
 
-aside::-webkit-scrollbar {
-  width: 8px;
+/* Scrollbar styling */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-aside::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
-aside::-webkit-scrollbar-track {
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+*::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid rgba(249, 115, 22, 0.6);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

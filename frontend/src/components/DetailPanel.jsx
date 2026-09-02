@@ -33,7 +33,7 @@ function Reading({ label, value, unit }) {
 function CloseIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <path d="M18 6 6 18M6 6l12 12" />
     </svg>
   )
@@ -41,9 +41,9 @@ function CloseIcon() {
 
 function PriorityBadge({ priority }) {
   return (
-    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold
+    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold
       tracking-widest ${PRIORITY_STYLES[priority] || PRIORITY_STYLES.Low}`}>
-      {String(priority).toUpperCase()} PRIORITY
+      {String(priority).toUpperCase()}
     </span>
   )
 }
@@ -57,7 +57,7 @@ function ProbChart({ top3 }) {
   return (
     <ResponsiveContainer width="100%" height={104}>
       <BarChart data={data} layout="vertical"
-        margin={{ top: 0, right: 24, bottom: 0, left: 0 }} barSize={16}>
+        margin={{ top: 0, right: 24, bottom: 0, left: 0 }} barSize={14}>
         <XAxis type="number" domain={[0, 1]}
           tickFormatter={(v) => `${Math.round(v * 100)}%`}
           tick={{ fontSize: 10, fill: '#94a3b8' }}
@@ -73,7 +73,7 @@ function ProbChart({ top3 }) {
           }}
           cursor={{ fill: 'rgb(15 23 42 / 0.04)' }}
         />
-        <Bar dataKey="prob" radius={[0, 6, 6, 0]} isAnimationActive={false}>
+        <Bar dataKey="prob" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {data.map((d, i) => (
             <Cell key={i} fill={d.color} />
           ))}
@@ -97,7 +97,7 @@ function DetailBody({ d }) {
           <div className="flex items-center gap-2.5">
             <span className="h-3 w-3 rounded-full shrink-0"
               style={{ backgroundColor: color }} />
-            <h3 className="font-semibold text-slate-900 leading-tight text-sm sm:text-base">
+            <h3 className="font-display font-semibold text-slate-900 leading-tight text-sm sm:text-base">
               {d.predicted_class}
             </h3>
           </div>
@@ -179,7 +179,7 @@ function DetailBody({ d }) {
                 leading-relaxed">
                 <svg viewBox="0 0 24 24" className="h-3 w-3 mt-0.5 shrink-0
                   text-slate-400" fill="none" stroke="currentColor"
-                  strokeWidth="2.5" strokeLinecap="round">
+                  strokeWidth="2" strokeLinecap="round">
                   <path d="M18 6 6 18M6 6l12 12" />
                 </svg>
                 <span>{b.replace(/\.$/, '')}</span>
@@ -201,16 +201,16 @@ function DetailBody({ d }) {
 export default function DetailPanel({ entry, onClose }) {
   return (
     <>
-      {/* Mobile backdrop */}
+      {/* Backdrop */}
       <div
-        className="lg:hidden fixed inset-0 z-[65] bg-black/40 backdrop-blur-[1px]"
+        className="fixed inset-0 z-[65] bg-black/40 backdrop-blur-[1px] animate-fade-in"
         onClick={onClose}
       />
 
-      <aside className="w-full sm:w-[320px] lg:w-1/5 lg:min-w-[270px] lg:max-w-[360px]
-        shrink-0 bg-white border-l border-slate-200 overflow-y-auto
-        fixed lg:static inset-y-0 right-0 z-[70]
-        h-full shadow-2xl lg:shadow-none">
+      <aside className="w-full sm:w-[340px]
+        bg-white border-l border-slate-200 overflow-y-auto
+        fixed inset-y-0 right-0 z-[70]
+        h-full shadow-2xl animate-slide-right">
         <button
           onClick={onClose}
           className="sticky top-3 float-right mr-3 z-10 h-7 w-7 rounded-lg
@@ -226,7 +226,7 @@ export default function DetailPanel({ entry, onClose }) {
             gap-3 text-slate-400">
             <div className="h-7 w-7 rounded-full border-[3px]
               border-slate-200 border-t-orange-500 animate-spin" />
-            <p className="text-xs">Classifying detection…</p>
+            <p className="text-xs">Classifying detection...</p>
           </div>
         )}
 
