@@ -99,10 +99,10 @@ export default function TopNav({ search, onSearch, lastRefresh, onRefresh,
         <div className="leading-tight">
           <h1 className="text-[14px] sm:text-[15px] font-display font-semibold
             text-slate-900 tracking-tight">
-            Thermal Anomaly Classifier
+            TAKIS
           </h1>
           <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
-            SIH26162 · fire type intelligence
+            Thermal Anomaly Classification &amp; Investigation System
           </p>
         </div>
       </div>
